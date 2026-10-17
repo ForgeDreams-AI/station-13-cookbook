@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>🚒 Station 13 Cookbook</title>
+<style>
+  :root{
+    --red:#c0392b; --red-dark:#96281b; --ink:#1f2937; --muted:#6b7280;
+    --bg:#faf7f2; --card:#ffffff; --line:#e8e0d4; --green:#2e7d32;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55;}
+  header{background:linear-gradient(135deg,var(--red-dark),var(--red)); color:#fff;
+    padding:2.2rem 1.25rem 1.6rem; text-align:center;}
+  header h1{margin:0; font-size:1.7rem; letter-spacing:.5px;}
+  header p{margin:.4rem 0 0; opacity:.92; font-size:.95rem;}
+  .wrap{max-width:760px; margin:0 auto; padding:1rem 1rem 3rem;}
+  .search{position:sticky; top:0; z-index:5; background:var(--bg); padding:.6rem 0;}
+  .search input{width:100%; padding:.8rem 1rem; font-size:1rem; border:2px solid var(--line);
+    border-radius:12px; background:#fff; outline:none;}
+  .search input:focus{border-color:var(--red);}
+  .count{color:var(--muted); font-size:.85rem; margin:.4rem .2rem 1rem;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+    margin-bottom:1rem; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06);}
+  .card-head{padding:1rem 1.1rem; cursor:pointer; user-select:none;}
+  .card-head h2{margin:0 0 .3rem; font-size:1.15rem;}
+  .meta{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem;}
+  .pill{font-size:.75rem; font-weight:600; padding:.2rem .6rem; border-radius:999px;
+    background:#f3ede2; color:#7a5c2e;}
+  .pill.protein{background:#e6f2e6; color:var(--green);}
+  .pill.date{background:#fdecea; color:var(--red-dark);}
+  .chev{float:right; color:var(--muted); font-size:1.2rem; line-height:1;}
+  .card-body{display:none; padding:0 1.1rem 1.2rem; border-top:1px dashed var(--line);}
+  .card.open .card-body{display:block;}
+  .card.open .chev{transform:rotate(180deg); display:inline-block;}
+  .card-body h3{margin:1rem 0 .4rem; font-size:.95rem; text-transform:uppercase;
+    letter-spacing:.6px; color:var(--red-dark);}
+  ul,ol{margin:.3rem 0; padding-left:1.3rem;}
+  li{margin-bottom:.3rem;}
+  .tip{background:#fff8e6; border-left:4px solid #e6a817; padding:.6rem .8rem;
+    border-radius:0 8px 8px 0; margin:.8rem 0; font-size:.92rem;}
+  footer{text-align:center; color:var(--muted); font-size:.8rem; padding:2rem 1rem;}
+  .empty{text-align:center; color:var(--muted); padding:2rem 0; display:none;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚒 Station 13 Cookbook</h1>
+  <p>Engine 13 · C-shift — healthy, hearty, high-protein firehouse meals</p>
+</header>
+<div class="wrap">
+  <div class="search"><input id="q" type="search" placeholder="Search meals or ingredients…"></div>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+  <div class="empty" id="empty">No meals match that search.</div>
+</div>
+<footer>Built for the Station 13 crew · new shift meals land here automatically</footer>
+
+<script>
+const RECIPES = [
+  {
+    name: "High-Protein Chicken Enchilada Casserole",
+    emoji: "🫓", date: "Oct 17, 2026", meal: "Lunch",
+    protein: "~35g protein/serving", time: "Prep 15 min · Cook 30 min", servings: "6 big servings",
+    gear: "One 9×13 dish + skillet",
+    tip: null,
+    ingredients: [
+      "3 lbs boneless skinless chicken breast",
+      "1 can (15 oz) black beans, drained",
+      "2 cans (10 oz) red enchilada sauce",
+      "1 cup frozen corn",
+      "1 medium yellow onion, diced",
+      "3 cloves garlic",
+      "1.5 tsp cumin, 1.5 tsp chili powder, salt & pepper",
+      "12 corn tortillas, quartered",
+      "2 cups shredded cheddar",
+      "1 cup plain Greek yogurt, for topping",
+      "Fresh cilantro, for garnish"
+    ],
+    steps: [
+      "Heat oven to 375°F. Poach or pan-cook the chicken 10–12 min until done; shred with two forks.",
+      "Sauté diced onion 3–4 min; add garlic, cook 30 sec.",
+      "Stir in shredded chicken, beans, corn, enchilada sauce, cumin, chili powder, salt/pepper; simmer 5 min.",
+      "Layer half the tortilla quarters in a greased 9×13 dish; spread half the chicken mix; sprinkle half the cheddar.",
+      "Repeat layers with remaining tortillas, chicken mix, cheddar.",
+      "Bake 25–30 min until cheese is melted and bubbling. Rest 5–10 min.",
+      "Serve dolloped with Greek yogurt + cilantro."
+    ]
+  },
+  {
+    name: "One-Pot Cheesy Beef Goulash",
+    emoji: "🍲", date: "Oct 17, 2026", meal: "Dinner",
+    protein: "~32g protein/serving", time: "Prep 5 min · Cook 30 min", servings: "6 big servings",
+    gear: "One big pot — easy cleanup",
+    tip: "Stir the pasta a few times while it simmers so it doesn't stick. Reheats great for late-night snacking between calls.",
+    ingredients: [
+      "2 lbs lean ground beef (80/20)",
+      "1 large yellow onion, diced",
+      "4 cloves garlic, minced",
+      "1 lb elbow macaroni",
+      "1 can (15 oz) tomato sauce",
+      "1 can (14.5 oz) diced tomatoes",
+      "32 oz beef broth",
+      "2 tbsp tomato paste",
+      "1.5 tsp Italian seasoning, 1 tsp paprika, salt & pepper",
+      "2 cups shredded sharp cheddar",
+      "1 cup shredded mozzarella",
+      "1 tbsp olive oil + parsley garnish"
+    ],
+    steps: [
+      "Heat oil in a large Dutch oven/pot over medium-high. Brown ground beef 5–6 min, breaking apart; drain excess fat.",
+      "Add onion and garlic; cook 2–3 min until softened.",
+      "Stir in tomato paste, Italian seasoning, paprika, salt, pepper; cook 1 min until fragrant.",
+      "Pour in tomato sauce, diced tomatoes (with juice), beef broth, and macaroni; stir well.",
+      "Bring to a boil, then reduce to a simmer; cover and cook 12–15 min, stirring occasionally, until pasta is tender.",
+      "Remove from heat; stir in cheddar until melted. Top with mozzarella, cover 2 min to melt.",
+      "Garnish with parsley and serve hot."
+    ]
+  },
+  {
+    name: "Sheet-Pan Chicken Fajita Wraps",
+    emoji: "🥙", date: "Oct 14, 2026", meal: "Lunch",
+    protein: "High-protein", time: "~20 min", servings: "5",
+    gear: "Two sheet pans, one oven",
+    tip: "Chicken thighs at $0.99/lb keep this on budget — juicier and harder to overcook than breast. Crew eats in under 20 min, fits around mid-day calls.",
+    ingredients: [
+      "5 lbs bone-in chicken thighs",
+      "6 bell peppers (3 red, 3 yellow), sliced",
+      "2 large red onions, sliced",
+      "Olive oil, for drizzling",
+      "Kosher salt and freshly ground black pepper",
+      "Quick guacamole: 4 ripe avocados, 1 white onion (finely diced), ½ cup fresh cilantro, juice of 3 limes, cumin + salt",
+      "12 large flour tortillas, for serving"
+    ],
+    steps: [
+      "Heat oven to 450°F. Spread peppers and red onion on one sheet pan. Pat thighs dry on a second pan (skin up if skin-on). Drizzle both with olive oil; season generously.",
+      "Roast 25–30 min until thighs hit 175°F and veg is charred at the edges. Broil 1–2 min at the end for char.",
+      "Rest 5 min, pull meat off the bone, chop roughly, toss with the roasted veg.",
+      "Mash avocados with white onion, cilantro, lime juice, cumin, salt — chunky.",
+      "Toast tortillas in a dry skillet or over low flame. Spread guac, pile on chicken + veg, roll tight."
+    ]
+  },
+  {
+    name: "Firehouse Chicken Spaghetti with Burst Tomatoes",
+    emoji: "🍝", date: "Oct 14, 2026", meal: "Dinner",
+    protein: "High-protein", time: "30 min", servings: "5",
+    gear: "One big pot + one skillet",
+    tip: "Roma tomatoes burst just like cherry tomatoes for a fraction of the price. Reserve that pasta water — it's what makes the sauce coat instead of pool.",
+    ingredients: [
+      "1.5 lbs spaghetti",
+      "3 lbs boneless chicken breast, pounded or sliced thin",
+      "1 Tbsp + 1 tsp Italian seasoning",
+      "6 Tbsp olive oil, divided",
+      "2 shallots, finely chopped",
+      "8–10 garlic cloves, minced",
+      "2.5 lbs Roma tomatoes",
+      "1 cup freshly grated Parmesan, plus more for serving",
+      "Salt & pepper, to taste"
+    ],
+    steps: [
+      "Boil salted water; cook spaghetti al dente. Reserve 1 cup pasta water; drain.",
+      "Coat chicken with Italian seasoning, 2 Tbsp olive oil, salt, pepper. Grill or sear until cooked through; rest 5 min, cube.",
+      "In a large skillet, heat remaining olive oil over medium. Soften shallots 2–3 min; add garlic 1 min.",
+      "Add Roma tomatoes (halved if large); cook 10–15 min until softened and bursting, pressing with a spoon.",
+      "Add spaghetti, cubed chicken, Parmesan; toss with splashes of pasta water to coat. Season and serve with extra Parmesan."
+    ]
+  }
+];
+
+const list = document.getElementById('list');
+const count = document.getElementById('count');
+const empty = document.getElementById('empty');
+const q = document.getElementById('q');
+
+function render(filter=""){
+  const f = filter.trim().toLowerCase();
+  list.innerHTML = "";
+  let n = 0;
+  RECIPES.forEach((r,i)=>{
+    const hay = (r.name+" "+r.ingredients.join(" ")+" "+r.meal).toLowerCase();
+    if(f && !hay.includes(f)) return;
+    n++;
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML =
+      '<div class="card-head" onclick="this.parentNode.classList.toggle(\'open\')">'+
+        '<span class="chev">▾</span>'+
+        '<h2>'+r.emoji+' '+r.name+'</h2>'+
+        '<div class="meta">'+
+          '<span class="pill date">'+r.date+' · '+r.meal+'</span>'+
+          '<span class="pill protein">'+r.protein+'</span>'+
+          '<span class="pill">'+r.time+'</span>'+
+          '<span class="pill">Serves '+r.servings+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card-body">'+
+        '<h3>Gear</h3><p style="margin:.2rem 0">'+r.gear+'</p>'+
+        (r.tip ? '<div class="tip">💡 '+r.tip+'</div>' : '')+
+        '<h3>Ingredients</h3><ul>'+r.ingredients.map(x=>'<li>'+x+'</li>').join('')+'</ul>'+
+        '<h3>Steps</h3><ol>'+r.steps.map(x=>'<li>'+x+'</li>').join('')+'</ol>'+
+      '</div>';
+    list.appendChild(el);
+  });
+  count.textContent = n + (n===1 ? " meal" : " meals") + " in the cookbook";
+  empty.style.display = n ? "none" : "block";
+}
+q.addEventListener('input', e=>render(e.target.value));
+render();
+</script>
+</body>
+</html>
